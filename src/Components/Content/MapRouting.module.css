@@ -1,0 +1,8 @@
+.mapRouting{
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px
+}
+.mapRouting__wrapper{
+    display: flex;
+}
