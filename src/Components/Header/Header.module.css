@@ -1,0 +1,26 @@
+.header{
+    margin: 0 auto;
+    background-color: rgba(214, 214, 214, 0.514);
+    margin-bottom: 20px;
+}
+.header p{
+    width: 85vw;
+    text-align: center;
+    margin: 0 auto;
+    display: block;
+    font-family: 'DejaVu Sans Mono';
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.42px;
+}
+.header__title{
+
+    font-size: 28px;
+    font-weight: medium;
+    line-height: 55px;
+}
+.header__text{
+    font-size: 18px;
+    font-weight: lite;
+    line-height: 55px;
+}

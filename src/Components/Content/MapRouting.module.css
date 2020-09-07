@@ -1,8 +1,22 @@
 .mapRouting{
-    margin-left: auto;
-    margin-right: auto;
-    width: 500px
+    /* display: flex;
+    flex-wrap: wrap; */
+    display: grid;
+    grid-template-columns: 300px repeat(auto-fill, minmax(300px, 100%));
+    /* justify-content: space-between; */
+    margin: 0 auto;
+    width: 80%;
 }
-.mapRouting__wrapper{
-    display: flex;
+@media (max-width: 600px){
+    .mapRouting{
+        display: grid;
+        grid-template-columns: 100%;
+}
+}
+.mapRouting__points{
+    width: 100%;
+}
+.mapRouting__map{
+    min-width: 300px;
+    max-width: 1900px;
 }
