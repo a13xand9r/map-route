@@ -1,12 +1,12 @@
 .newPointForm{
     width: 100%;
-    /* margin-right: 10px; */
     margin-bottom: 10px;
 }
 .newPointForm__input{
     width: 100%;
     height: 50px;
     border-radius: 10px;
+    padding-left: 20px;
     border: none;
     outline: none;
     background-color: rgb(216, 216, 216);
@@ -16,4 +16,9 @@
 }
 .newPointForm__errorText{
     color: rgb(197, 0, 0);
+}
+.newPointForm__inputLabel{
+    padding-left: 7px;
+    font-family: 'DejaVu Sans Mono';
+    font-size: 16px;
 }

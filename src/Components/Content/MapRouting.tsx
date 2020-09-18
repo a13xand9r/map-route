@@ -1,27 +1,32 @@
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import styles from './mapRouting.module.css'
-import { RoutePoints } from './RoutePoints/RoutePoints'
+import { RoutePointsList } from './RoutePoints/RoutePointsList'
 import { MapComponent } from './Map/Map'
-import { mapRouteReducer, initialState } from '../../mapRouteReducer'
+import { mapRouteReducer, initialState, updatePointCoordinates, addNewPoint } from '../../mapRouteReducer'
 
 
 export const MapRouting: React.FC = () => {
     let [state, dispatch] = useReducer(mapRouteReducer, initialState)
+    let { pointIsFetching, routeArray, yMaps, yandexMapState } = state
+    useEffect(() => {
+        let { reason, newPointName, movedMarker } = pointIsFetching
+        if (reason === 'NEW_POINT' && yMaps && newPointName) {
+            addNewPoint(yMaps, yandexMapState.center, dispatch, newPointName)
+        } else if (reason === 'UPDATE_COORDINATES' && yMaps && movedMarker.newCoordinates && movedMarker.id) {
+            updatePointCoordinates(yMaps, movedMarker.newCoordinates, movedMarker.id, dispatch, routeArray)
+        }
+    }, [pointIsFetching])
     return (
         <main className={styles.mapRouting}>
             <div className={styles.mapRouting__points}>
-                <RoutePoints dispatch={dispatch}
+                <RoutePointsList dispatch={dispatch}
                     routeArray={state.routeArray}
-                    yMaps={state.yMaps}
-                    centerCoordinates={state.centerCoordinates}
-                    pointIsFetching={state.pointIsFetching}
-                    centerCoordinatesUpdated={state.centerCoordinatesUpdated} />
+                    noPointInCenter={state.noPointInCenter} />
             </div>
             <div className={styles.mapRouting__map}>
                 <MapComponent dispatch={dispatch}
                     routeArray={state.routeArray}
-                    pointIsFetching={state.pointIsFetching}
-                    yMaps={state.yMaps} />
+                    mapState={state.yandexMapState} />
             </div>
         </main>
     )
