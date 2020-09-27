@@ -1,8 +1,8 @@
-import { YMapsApi } from "react-yandex-maps"
-import { Dispatch } from "react"
-import { yandexMapsApi } from "./Api/mapApi"
+import { Dispatch } from 'react'
+import { YMapsApi } from 'react-yandex-maps'
+import { yandexMapsApi } from './Api/mapApi'
 
-export let initialState = {
+export const initialState = {
     routeArray: [
         { addr: 'Moscow, Lenina 1', name: 'Vape shop', coordinates: [55.684758, 37.738521], id: 1 },
         { addr: 'Moscow, Komsomolskaya 43k1', name: 'Tigr mall', coordinates: [57.684758, 39.738521], id: 2 },
@@ -18,10 +18,10 @@ export let initialState = {
             newCoordinates: null
         }
     } as PointIsFetchingType,
-    noPointInCenter: true
+    isNoPointInCenter: true
 }
 
-export const mapRouteReducer = (state = initialState, action: ActionsType): InitialStateType => {
+export const mapRouteReducer = (state = initialState, action: ActionsType): StateType => {
     switch (action.type) {
         case 'ADD_POINT':
             let newId: number = 0
@@ -31,7 +31,7 @@ export const mapRouteReducer = (state = initialState, action: ActionsType): Init
             return {
                 ...state,
                 routeArray: [...state.routeArray, { ...action.payload, coordinates: state.yandexMapState.center, id: newId + 1 }],
-                noPointInCenter: false
+                isNoPointInCenter: false
             }
         case 'DELETE_POINT':
             return {
@@ -52,19 +52,19 @@ export const mapRouteReducer = (state = initialState, action: ActionsType): Init
             }
         case 'UPDATE_POINT_COORDINATES':
             let maxId: number = -1
-            if (!state.noPointInCenter)
+            if (!state.isNoPointInCenter)
                 maxId = Math.max.apply(null, state.routeArray.map(point => point.id))
             return {
                 ...state,
-                noPointInCenter: maxId === action.payload.id ? true : state.noPointInCenter,
+                isNoPointInCenter: maxId === action.payload.id ? true : state.isNoPointInCenter,
                 routeArray: state.routeArray.map(point => {
                     if (action.payload.id !== point.id) return point
                     else return { ...point, ...action.payload, coordinates: [...action.payload.coordinates] }
                 })
             }
         case 'CHANGE_POINTS_ORDER':
-            let routePoints = [...state.routeArray]
-            let droppedPoint = { ...state.routeArray[action.sourceIndex] }
+            const routePoints = [...state.routeArray]
+            const droppedPoint = { ...state.routeArray[action.sourceIndex] }
             routePoints.splice(action.sourceIndex, 1)
             routePoints.splice(action.destIndex, 0, droppedPoint)
             return {
@@ -75,7 +75,7 @@ export const mapRouteReducer = (state = initialState, action: ActionsType): Init
             return {
                 ...state,
                 yandexMapState: action.payload,
-                noPointInCenter: true
+                isNoPointInCenter: true
             }
         case 'SET_YMAPS':
             return {
@@ -109,15 +109,16 @@ export const updatePointCoordinates = async (yMaps: YMapsApi,
     dispatch: Dispatch<ActionsType>,
     routeArray: Array<RoutePointType>) => {
     try {
-        let addr: string = await yandexMapsApi.getAddressFromCoordinates(yMaps, coordinates)
+        const addr: string = await yandexMapsApi.getAddressFromCoordinates(yMaps, coordinates)
         dispatch(actions.updatePointCoordinates(coordinates, addr, moveMarkerId))
     } catch {
-        let routePointToReturnBack = routeArray.filter(point => moveMarkerId === point.id)[0]
-        let coordinatesBack = routePointToReturnBack.coordinates
-        let addrBack = routePointToReturnBack.addr
+        const routePointToReturnBack = routeArray.filter(point => moveMarkerId === point.id)[0]
+        const coordinatesBack = routePointToReturnBack.coordinates
+        const addrBack = routePointToReturnBack.addr
         dispatch(actions.updatePointCoordinates(coordinatesBack, addrBack, moveMarkerId))
+    } finally {
+        dispatch(actions.setPointIsFetching(null))
     }
-    dispatch(actions.setPointIsFetching(null))
 }
 
 export const addNewPoint = async (yMaps: YMapsApi,
@@ -125,10 +126,11 @@ export const addNewPoint = async (yMaps: YMapsApi,
     dispatch: Dispatch<ActionsType>,
     pointName: string) => {
     try {
-        let addr: string = await yandexMapsApi.getAddressFromCoordinates(yMaps, coordinates)
+        const addr: string = await yandexMapsApi.getAddressFromCoordinates(yMaps, coordinates)
         dispatch(actions.addRoutePoint(pointName, addr))
-    } catch { }
-    dispatch(actions.setPointIsFetching(null))
+    } catch {} finally {
+        dispatch(actions.setPointIsFetching(null))
+    }
 }
 
 type InferActionType<T> = T extends { [key: string]: (...args: any[]) => infer U } ? U : never
@@ -152,4 +154,4 @@ export type PointIsFetchingType = {
         newCoordinates: Array<number> | null
     }
 }
-export type InitialStateType = typeof initialState
+export type StateType = typeof initialState

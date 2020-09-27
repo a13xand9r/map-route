@@ -3,7 +3,7 @@ import styles from './newPointForm.module.css'
 import cn from 'classnames'
 
 
-export const NewPointForm: React.FC<PropsType> = ({ addNewPoint, noPointInCenter }) => {
+export const NewPointForm: React.FC<PropsType> = ({ addNewPoint, isNoPointInCenter: noPointInCenter }) => {
     const [inputValue, setInputValue] = useState('')
     const [inputError, setInputError] = useState('')
     const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -44,5 +44,5 @@ export const NewPointForm: React.FC<PropsType> = ({ addNewPoint, noPointInCenter
 
 type PropsType = {
     addNewPoint: (newPointName: string) => void
-    noPointInCenter: boolean
+    isNoPointInCenter: boolean
 }

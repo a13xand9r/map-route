@@ -1,7 +1,8 @@
-import { GET_ADDRESS_ERROR_MESSAGE, yandexMapsApi } from "./Api/mapApi"
-import { RoutePointType, actions, mapRouteReducer, InitialStateType, PointIsFetchingType, updatePointCoordinates, addNewPoint } from "./mapRouteReducer"
+import { yandexMapsApi } from './Api/mapApi'
+import { StateType, RoutePointType, actions, mapRouteReducer, PointIsFetchingType, updatePointCoordinates, addNewPoint } from './mapRouteReducer'
 
-let state: InitialStateType
+
+let state: StateType
 let routeArray: Array<RoutePointType>
 
 beforeEach(() => {
@@ -21,14 +22,14 @@ beforeEach(() => {
                 newCoordinates: null
             }
         },
-        noPointInCenter: true
+        isNoPointInCenter: true
     }
     routeArray = state.routeArray
 })
 
 describe('adding new point', () => {
-    let newPointData: RoutePointType = { addr: 'Москва, Отрадное 32к1', name: 'Moscow church', coordinates: [55.75, 37.57], id: 4 }
-    let action = actions.addRoutePoint('Moscow church', 'Москва, Отрадное 32к1')
+    const newPointData: RoutePointType = { addr: 'Москва, Отрадное 32к1', name: 'Moscow church', coordinates: [55.75, 37.57], id: 4 }
+    const action = actions.addRoutePoint('Moscow church', 'Москва, Отрадное 32к1')
     it('length of routeArray should increment', () => {
         expect(mapRouteReducer(state, action).routeArray.length).toBe(4)
     })
@@ -39,17 +40,17 @@ describe('adding new point', () => {
         expect(mapRouteReducer(state, action).routeArray.filter((el, index) => index !== 3)).toEqual(routeArray)
     })
     it('noPointInCenter bool should be false', () => {
-        expect(mapRouteReducer(state, action).noPointInCenter).toBeFalsy()
+        expect(mapRouteReducer(state, action).isNoPointInCenter).toBeFalsy()
     })
 })
 
 describe('deleting point', () => {
-    let action = actions.deleteRoutePoint(2)
+    const action = actions.deleteRoutePoint(2)
     it('length of routeArray should decrement', () => {
         expect(mapRouteReducer(state, action).routeArray.length).toBe(2)
     })
     it(`other points shouldn't be changed`, () => {
-        let routeArray = [
+        const routeArray = [
             { addr: 'Москва, Ленина 1', name: 'Vape shop', coordinates: [55.684758, 37.738521], id: 1 },
             { addr: 'Казань, Площадь Ильича 32a', name: 'Parking', coordinates: [56.684758, 39.738521], id: 3 }
         ]
@@ -59,7 +60,7 @@ describe('deleting point', () => {
 
 describe('point is fetching', () => {
     it('new point fetching should be set', () => {
-        let pointIsFetchingObject: PointIsFetchingType = {
+        const pointIsFetchingObject: PointIsFetchingType = {
             reason: 'NEW_POINT',
             newPointName: 'Big Ben',
             movedMarker: {
@@ -67,11 +68,11 @@ describe('point is fetching', () => {
                 newCoordinates: null
             }
         }
-        let action = actions.setPointIsFetching('NEW_POINT', 'Big Ben')
+        const action = actions.setPointIsFetching('NEW_POINT', 'Big Ben')
         expect(mapRouteReducer(state, action).pointIsFetching).toEqual(pointIsFetchingObject)
     })
     it('update point coordinates fetching should be set', () => {
-        let pointIsFetchingObject: PointIsFetchingType = {
+        const pointIsFetchingObject: PointIsFetchingType = {
             reason: 'UPDATE_COORDINATES',
             newPointName: null,
             movedMarker: {
@@ -79,11 +80,11 @@ describe('point is fetching', () => {
                 newCoordinates: [35.777, 14.777]
             }
         }
-        let action = actions.setPointIsFetching('UPDATE_COORDINATES', null, [35.777, 14.777], 2)
+        const action = actions.setPointIsFetching('UPDATE_COORDINATES', null, [35.777, 14.777], 2)
         expect(mapRouteReducer(state, action).pointIsFetching).toEqual(pointIsFetchingObject)
     })
     it('fetching after delete should be null', () => {
-        let pointIsFetchingObject: PointIsFetchingType = {
+        const pointIsFetchingObject: PointIsFetchingType = {
             reason: null,
             newPointName: null,
             movedMarker: {
@@ -91,52 +92,52 @@ describe('point is fetching', () => {
                 newCoordinates: null
             }
         }
-        let action = actions.setPointIsFetching(null)
+        const action = actions.setPointIsFetching(null)
         expect(mapRouteReducer(state, action).pointIsFetching).toEqual(pointIsFetchingObject)
     })
 })
 
 describe('updating point coordinates', () => {
-    let newCoordinates: Array<number> = [55.755, 37.577]
+    const newCoordinates: Array<number> = [55.755, 37.577]
     it('point coordinates should update', () => {
-        let action = actions.updatePointCoordinates(newCoordinates, 'Москва, Отрадное 32к1', 3)
+        const action = actions.updatePointCoordinates(newCoordinates, 'Москва, Отрадное 32к1', 3)
         expect(mapRouteReducer(state, action).routeArray.filter(el => el.id === 3)[0].coordinates).toEqual(newCoordinates)
     })
     it(`point coordinates shouldn't update if there is no point with action id`, () => {
-        let action = actions.updatePointCoordinates(newCoordinates, 'Москва, Отрадное 32к1', 100)
+        const action = actions.updatePointCoordinates(newCoordinates, 'Москва, Отрадное 32к1', 100)
         expect(mapRouteReducer(state, action).routeArray).toEqual(routeArray)
     })
     it(`noPointInCenter bool should be true if id is max`, () => {
-        state.noPointInCenter = false
-        let action = actions.updatePointCoordinates(newCoordinates, 'Москва, Отрадное 32к1', 3)
-        expect(mapRouteReducer(state, action).noPointInCenter).toBeTruthy()
+        state.isNoPointInCenter = false
+        const action = actions.updatePointCoordinates(newCoordinates, 'Москва, Отрадное 32к1', 3)
+        expect(mapRouteReducer(state, action).isNoPointInCenter).toBeTruthy()
     })
     it(`noPointInCenter bool should be false if id is not max`, () => {
-        state.noPointInCenter = false
-        let action = actions.updatePointCoordinates(newCoordinates, 'Москва, Отрадное 32к1', 2)
-        expect(mapRouteReducer(state, action).noPointInCenter).toBeFalsy()
+        state.isNoPointInCenter = false
+        const action = actions.updatePointCoordinates(newCoordinates, 'Москва, Отрадное 32к1', 2)
+        expect(mapRouteReducer(state, action).isNoPointInCenter).toBeFalsy()
     })
 })
 
 describe('change point order', () => {
     it('points should be reordered', () => {
-        let routeArray = [
+        const routeArray = [
             { addr: 'Москва, Комсомольская 43к2', name: 'Mall', coordinates: [57.684758, 39.738521], id: 2 },
             { addr: 'Казань, Площадь Ильича 32a', name: 'Parking', coordinates: [56.684758, 39.738521], id: 3 },
             { addr: 'Москва, Ленина 1', name: 'Vape shop', coordinates: [55.684758, 37.738521], id: 1 },
         ]
-        let action = actions.reorderRoutePoints(0, 2)
+        const action = actions.reorderRoutePoints(0, 2)
         expect(mapRouteReducer(state, action).routeArray).toEqual(routeArray)
     })
     it(`points shouldn't be reordered`, () => {
-        let action = actions.reorderRoutePoints(1, 1)
+        const action = actions.reorderRoutePoints(1, 1)
         expect(mapRouteReducer(state, action).routeArray).toEqual(routeArray)
     })
 })
 
 describe('update map center', () => {
-    let newCoordinates: Array<number> = [50, 40]
-    let action = actions.updateCenter(newCoordinates, 10)
+    const newCoordinates: Array<number> = [50, 40]
+    const action = actions.updateCenter(newCoordinates, 10)
     it('center coordinates should update', () => {
         expect(mapRouteReducer(state, action).yandexMapState.center).toEqual(newCoordinates)
     })
@@ -144,14 +145,14 @@ describe('update map center', () => {
         expect(mapRouteReducer(state, action).yandexMapState.zoom).toBe(10)
     })
     it('noPointInCenter bool should be true', () => {
-        state.noPointInCenter = false
-        expect(mapRouteReducer(state, action).noPointInCenter).toBeTruthy()
+        state.isNoPointInCenter = false
+        expect(mapRouteReducer(state, action).isNoPointInCenter).toBeTruthy()
     })
 })
 
 describe('set yMaps', () => {
-    let YMaps = { yMaps: 'some value' }
-    let action = actions.setYMaps(YMaps)
+    const YMaps = { yMaps: 'some value' }
+    const action = actions.setYMaps(YMaps)
     it('yMaps object should be set', () => {
         expect(mapRouteReducer(state, action).yMaps).toBe(YMaps)
     })
@@ -160,19 +161,19 @@ describe('set yMaps', () => {
 //testing async functions
 
 jest.mock('./Api/mapApi')
-let yandexMapsApiMock = yandexMapsApi as jest.Mocked<typeof yandexMapsApi>
-let newAddress = 'Самара, Минская 1а'
+const yandexMapsApiMock = yandexMapsApi as jest.Mocked<typeof yandexMapsApi>
+const newAddress = 'Самара, Минская 1а'
 yandexMapsApiMock.getAddressFromCoordinates.mockReturnValue(Promise.resolve(newAddress))
 describe('testing updatePointCoordinates function', () => {
-    let newCoordinates = [55.55, 44.44]
-    let mockDispatch = jest.fn()
+    const newCoordinates = [55.55, 44.44]
+    const mockDispatch = jest.fn()
     beforeEach(() => {
         mockDispatch.mockClear()
         yandexMapsApiMock.getAddressFromCoordinates.mockReturnValue(Promise.resolve(newAddress))
     })
 
     it('updatePointCoordinates success', async () => {
-        let action = {
+        const action = {
             type: 'UPDATE_POINT_COORDINATES',
             payload: { id: 2, coordinates: newCoordinates, addr: newAddress }
         }
@@ -183,7 +184,7 @@ describe('testing updatePointCoordinates function', () => {
     })
 
     it('updatePointCoordinates error', async () => {
-        let action = {
+        const action = {
             type: 'UPDATE_POINT_COORDINATES',
             payload: { id: 2, coordinates: [57.684758, 39.738521], addr: 'Москва, Комсомольская 43к2' }
         }
@@ -196,8 +197,8 @@ describe('testing updatePointCoordinates function', () => {
 })
 
 describe('testing addNewPoint function', () => {
-    let mockDispatch = jest.fn()
-    let newPointName = 'Big Ben'
+    const mockDispatch = jest.fn()
+    const newPointName = 'Big Ben'
     beforeEach(() => {
         mockDispatch.mockClear()
         yandexMapsApiMock.getAddressFromCoordinates.mockReturnValue(Promise.resolve(newAddress))

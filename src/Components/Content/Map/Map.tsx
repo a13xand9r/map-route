@@ -12,7 +12,7 @@ export const MapComponent: React.FC<PropsType> = ({ dispatch, routeArray, mapSta
         dispatch(actions.updateCenter(event.originalEvent.newCenter, event.originalEvent.newZoom))
     }
     const onDragEnd = (id: number, event: AnyObject) => {
-        let coordinates = event.get('target').geometry.getCoordinates()
+        const coordinates = event.get('target').geometry.getCoordinates()
         dispatch(actions.setPointIsFetching('UPDATE_COORDINATES', null, coordinates, id))
     }
     return (

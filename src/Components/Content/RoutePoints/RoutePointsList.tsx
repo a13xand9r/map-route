@@ -5,9 +5,9 @@ import { PointItem } from './PointItem'
 import { RoutePointType, actions, ActionsType } from '../../../mapRouteReducer'
 
 export const RoutePointsList: React.FC<PropsType> = (props) => {
-    let { dispatch, routeArray, noPointInCenter } = props
+    const { dispatch, routeArray, isNoPointInCenter: noPointInCenter } = props
     const onDragEnd = (result: DropResult) => {
-        let { destination, reason, source } = result
+        const { destination, reason, source } = result
         if (!destination || destination.index === source.index || reason === 'CANCEL') {
             return;
         }
@@ -18,9 +18,9 @@ export const RoutePointsList: React.FC<PropsType> = (props) => {
     }
     return (
         <div>
-            <NewPointForm addNewPoint={requestNewPoint} noPointInCenter={noPointInCenter} />
+            <NewPointForm addNewPoint={requestNewPoint} isNoPointInCenter={noPointInCenter} />
             <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="RouteList">
+                <Droppable droppableId='RouteList'>
                     {provided =>
                         (<div ref={provided.innerRef} {...provided.droppableProps}>
                             {routeArray.map((point: RoutePointType, index: number) => (
@@ -36,5 +36,5 @@ export const RoutePointsList: React.FC<PropsType> = (props) => {
 type PropsType = {
     dispatch: Dispatch<ActionsType>
     routeArray: Array<RoutePointType>
-    noPointInCenter: boolean
+    isNoPointInCenter: boolean
 }
