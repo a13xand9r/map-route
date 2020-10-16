@@ -3,11 +3,7 @@ import { YMapsApi } from 'react-yandex-maps'
 import { yandexMapsApi } from './Api/mapApi'
 
 export const initialState = {
-    routeArray: [
-        { addr: 'Moscow, Lenina 1', name: 'Vape shop', coordinates: [55.684758, 37.738521], id: 1 },
-        { addr: 'Moscow, Komsomolskaya 43k1', name: 'Tigr mall', coordinates: [57.684758, 39.738521], id: 2 },
-        { addr: 'Kazan, Ilicha 32a', name: 'Kazan church', coordinates: [56.684758, 39.738521], id: 3 },
-    ] as Array<RoutePointType>,
+    routeArray: [] as Array<RoutePointType>,
     yandexMapState: { center: [55.75, 37.57], zoom: 9 } as yandexMapStateType,
     yMaps: null as null | YMapsApi,
     pointIsFetching: {
@@ -21,7 +17,15 @@ export const initialState = {
     isNoPointInCenter: true
 }
 
+const findMaxPointId = (state: StateType): number => {
+    let maxId: number = -1
+    if (!state.isNoPointInCenter)
+        maxId = Math.max(...state.routeArray.map(point => point.id))
+    return maxId
+}
+
 export const mapRouteReducer = (state = initialState, action: ActionsType): StateType => {
+    let maxId: number
     switch (action.type) {
         case 'ADD_POINT':
             let newId: number = 0
@@ -34,8 +38,10 @@ export const mapRouteReducer = (state = initialState, action: ActionsType): Stat
                 isNoPointInCenter: false
             }
         case 'DELETE_POINT':
+            maxId = findMaxPointId(state)
             return {
                 ...state,
+                isNoPointInCenter: maxId === action.id ? true : state.isNoPointInCenter,
                 routeArray: state.routeArray.filter(point => point.id !== action.id)
             }
         case 'SET_POINT_IS_FETCHING':
@@ -51,9 +57,7 @@ export const mapRouteReducer = (state = initialState, action: ActionsType): Stat
                 }
             }
         case 'UPDATE_POINT_COORDINATES':
-            let maxId: number = -1
-            if (!state.isNoPointInCenter)
-                maxId = Math.max.apply(null, state.routeArray.map(point => point.id))
+            maxId = findMaxPointId(state)
             return {
                 ...state,
                 isNoPointInCenter: maxId === action.payload.id ? true : state.isNoPointInCenter,

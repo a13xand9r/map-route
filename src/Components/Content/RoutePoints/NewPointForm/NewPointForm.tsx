@@ -1,14 +1,13 @@
-import React, { useState, FormEvent, ChangeEvent } from 'react'
+import React, { useState, FormEvent, ChangeEvent, memo } from 'react'
 import styles from './newPointForm.module.css'
 import cn from 'classnames'
 
-
-export const NewPointForm: React.FC<PropsType> = ({ addNewPoint, isNoPointInCenter: noPointInCenter }) => {
+export const NewPointForm: React.FC<PropsType> = ({ addNewPoint, isNoPointInCenter }) => {
     const [inputValue, setInputValue] = useState('')
     const [inputError, setInputError] = useState('')
     const submit = (event: FormEvent<HTMLFormElement>) => {
        event.preventDefault()
-        if (inputValue && noPointInCenter){
+        if (inputValue && isNoPointInCenter){
             addNewPoint(inputValue)
             setInputValue('')
             setInputError('')
@@ -19,28 +18,29 @@ export const NewPointForm: React.FC<PropsType> = ({ addNewPoint, isNoPointInCent
     }
     const onHandleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setInputValue(event.target.value)
-        if (event.target.value && !noPointInCenter){
+        if (event.target.value && !isNoPointInCenter){
             setInputError('В этом месте уже есть точка маршрута')
         } else {
             setInputError('')
         }
     }
-    const error = inputError && !noPointInCenter
+    const error = inputError && !isNoPointInCenter || inputError === 'Введите имя точки'
     return (
-        <div className={styles.newPointForm}>
-            <form onSubmit={submit}>
-                <input name='newPoint'
-                    type='text'
-                    autoComplete='off'
-                    onChange={onHandleChange}
-                    value={inputValue}
-                    placeholder='Введите новую точку маршрута'
-                    className={cn(styles.newPointForm__input, { [styles.newPointForm__input_error]: error })} />
-                {error && <div className={styles.newPointForm__errorText}>{inputError}</div>}
-            </form>
-        </div>
+        <form onSubmit={submit} id='newPointForm' className={styles.newPointForm}>
+            <input name='newPoint'
+                type='text'
+                autoComplete='off'
+                onChange={onHandleChange}
+                value={inputValue}
+                id='newPointInput'
+                title='При добавлении новая точка маршрута появится в центре карты'
+                placeholder='Введите новую точку маршрута'
+                className={cn(styles.newPointForm__input, { [styles.newPointForm__input_error]: error })} />
+            {error && <div className={styles.newPointForm__errorText}>{inputError}</div>}
+        </form>
     )
 }
+export const NewPointFormMemo: React.FC<PropsType> = memo(NewPointForm)
 
 type PropsType = {
     addNewPoint: (newPointName: string) => void

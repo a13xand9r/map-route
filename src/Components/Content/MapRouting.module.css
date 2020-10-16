@@ -1,22 +1,28 @@
 .mapRouting{
-    /* display: flex;
-    flex-wrap: wrap; */
     display: grid;
     grid-template-columns: 300px repeat(auto-fill, minmax(300px, 100%));
-    /* justify-content: space-between; */
     margin: 0 auto;
-    width: 80%;
+    width: 100%;
+    height: 100vh;
 }
 @media (max-width: 600px){
     .mapRouting{
         display: grid;
         grid-template-columns: 100%;
-}
+        height: 100%;
+    }
+    .mapRouting__map{
+        height: 90vh;
+    }
 }
 .mapRouting__points{
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
     width: 100%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    z-index: 1;
 }
 .mapRouting__map{
-    min-width: 300px;
-    max-width: 1900px;
+    max-width: 100%;
 }

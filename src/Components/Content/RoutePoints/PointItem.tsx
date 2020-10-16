@@ -11,9 +11,9 @@ export const PointItem: React.FC<PropsType> = ({name, addr, id, index, dispatch}
     return (
         <Draggable draggableId={id.toString()} index={index}>
             {provided => (
-                <div className = {styles.routeItem} 
+                <div className = {styles.routeItem}
                     ref={provided.innerRef}
-                    {...provided.draggableProps} 
+                    {...provided.draggableProps}
                     >
                     <img {...provided.dragHandleProps} src={handleIcon} alt='' className ={styles.routeItem__handle}/>
                     <div className = {styles.routeItem__text}>
