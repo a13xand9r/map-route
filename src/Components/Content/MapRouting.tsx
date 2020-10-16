@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer } from 'react'
-import styles from './mapRouting.module.css'
+import styles from './MapRouting.module.css'
 import { RoutePointsList } from './RoutePoints/RoutePointsList'
 import { MapComponent } from './Map/Map'
 import { mapRouteReducer, initialState, updatePointCoordinates, addNewPoint } from '../../mapRouteReducer'
