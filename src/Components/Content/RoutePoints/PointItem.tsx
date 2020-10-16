@@ -1,5 +1,5 @@
 import React, { Dispatch } from 'react'
-import styles from './routePoints.module.css'
+import styles from './RoutePoints.module.css'
 import { ActionsType, actions } from '../../../mapRouteReducer'
 import { Draggable } from 'react-beautiful-dnd'
 import handleIcon from '../../../img/dragHandleIcon.png'

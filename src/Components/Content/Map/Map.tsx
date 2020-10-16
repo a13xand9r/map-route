@@ -1,5 +1,5 @@
 import React, { Dispatch, memo, useCallback } from 'react'
-import styles from './map.module.css'
+import styles from './Map.module.css'
 import { YMaps, Map, Placemark, YMapsApi, Polyline, AnyObject } from 'react-yandex-maps'
 import { ActionsType, actions, RoutePointType, yandexMapStateType } from '../../../mapRouteReducer'
 

@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, ChangeEvent, memo } from 'react'
-import styles from './newPointForm.module.css'
+import styles from './NewPointForm.module.css'
 import cn from 'classnames'
 
 export const NewPointForm: React.FC<PropsType> = ({ addNewPoint, isNoPointInCenter }) => {
