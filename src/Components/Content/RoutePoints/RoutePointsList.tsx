@@ -14,12 +14,12 @@ export const RoutePointsList: React.FC<PropsType> = memo(
                     return
                 }
                 dispatch(actions.reorderRoutePoints(source.index, destination.index))
-            }, []
+            }, [dispatch]
         )
         const requestNewPoint = useCallback(
             (newPointName: string) => {
                 dispatch(actions.setPointIsFetching('NEW_POINT', newPointName))
-            },[]
+            },[dispatch]
         )
         return (
             <>

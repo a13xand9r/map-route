@@ -9,18 +9,18 @@ export const MapComponent: React.FC<PropsType> = memo(
         const onLoad = useCallback(
             (yMaps: YMapsApi) => {
                 dispatch(actions.setYMaps(yMaps))
-            }, []
+            }, [dispatch]
         )
         const onBoundsChange = useCallback(
             (event: BoundChangeEventType) => {
                 dispatch(actions.updateCenter(event.originalEvent.newCenter, event.originalEvent.newZoom))
-            }, []
+            }, [dispatch]
         )
         const onDragEnd = useCallback (
             (id: number, event: AnyObject) => {
                 const coordinates = event.get('target').geometry.getCoordinates()
                 dispatch(actions.setPointIsFetching('UPDATE_COORDINATES', null, coordinates, id))
-            }, []
+            }, [dispatch]
         )
         return (
             <YMaps query={{
