@@ -24,7 +24,7 @@ export const NewPointForm: React.FC<PropsType> = ({ addNewPoint, isNoPointInCent
             setInputError('')
         }
     }
-    const error = inputError && !isNoPointInCenter || inputError === 'Введите имя точки'
+    const error = ( inputError && !isNoPointInCenter ) || ( inputError === 'Введите имя точки' )
     return (
         <form onSubmit={submit} id='newPointForm' className={styles.newPointForm}>
             <input name='newPoint'
