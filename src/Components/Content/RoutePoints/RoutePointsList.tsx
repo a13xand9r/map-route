@@ -3,6 +3,7 @@ import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 import { NewPointFormMemo } from './NewPointForm/NewPointForm'
 import { PointItem } from './PointItem'
 import { RoutePointType, actions, ActionsType } from '../../../mapRouteReducer'
+import styles from './RoutePoints.module.css'
 
 export const RoutePointsList: React.FC<PropsType> = memo(
     (props) => {
@@ -24,6 +25,7 @@ export const RoutePointsList: React.FC<PropsType> = memo(
         return (
             <>
                 <NewPointFormMemo addNewPoint={requestNewPoint} isNoPointInCenter={isNoPointInCenter} />
+                {routeArray.length === 0 && <p className={styles.noPointText}>Точек маршрута пока нет</p>}
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId='RouteList'>
                         {provided =>
