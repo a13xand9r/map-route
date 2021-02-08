@@ -3,7 +3,9 @@ import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
 import { NewPointFormMemo } from './NewPointForm/NewPointForm'
 import { PointItem } from './PointItem'
 import { RoutePointType, actions, ActionsType } from '../../../mapRouteReducer'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import styles from './RoutePoints.module.css'
+import './../../../index.css'
 
 export const RoutePointsList: React.FC<PropsType> = memo(
     (props) => {
@@ -29,11 +31,20 @@ export const RoutePointsList: React.FC<PropsType> = memo(
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId='RouteList'>
                         {provided =>
-                            (<div ref={provided.innerRef} {...provided.droppableProps}>
+                        (<div ref={provided.innerRef} {...provided.droppableProps}>
+                            <TransitionGroup className="point-list">
                                 {routeArray.map((point: RoutePointType, index: number) => (
-                                    <PointItem key={point.id.toString()} {...point} index={index} dispatch={dispatch} />))}
+                                    <CSSTransition 
+                                        key={point.id.toString()}
+                                        timeout={400}
+                                        classNames='pointItem'
+                                    >
+                                        <PointItem {...point} index={index} dispatch={dispatch} />
+                                    </CSSTransition>
+                                ))}
                                 {provided.placeholder}
-                            </div>)}
+                            </TransitionGroup>
+                        </div>)}
                     </Droppable>
                 </DragDropContext>
             </>

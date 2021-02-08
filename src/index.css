@@ -7,3 +7,21 @@ body{
   box-sizing: border-box;
   font-family: 'Montserrat';
 }
+
+.pointItem-enter {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+.pointItem-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: 200ms ease-in;
+}
+.pointItem-exit {
+  opacity: 1;
+}
+.pointItem-exit-active {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: 300ms ease-in;
+}
